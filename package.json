@@ -9,6 +9,7 @@
     "node": ">=20"
   },
   "scripts": {
+    "postinstall": "playwright install chromium webkit",
     "test": "playwright test",
     "test:parte1": "playwright test --project=api",
     "test:parte2": "playwright test parte2-e2e",
