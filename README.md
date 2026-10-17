@@ -39,29 +39,31 @@ npm run report
 
 ## Estrutura do Projeto
 
-├── .github/workflows/playwright.yml Esteira de CI: roda os testes a cada push
-├── playwright.config.js Perfis de execução: api, desktop-chrome e mobile-safari
-├── casos-de-teste.txt Casos de teste das partes 1, 2 e 3
+```text
+├── .github/workflows/playwright.yml   Esteira de CI: roda os testes a cada push
+├── playwright.config.js               Perfis de execução: api, desktop-chrome e mobile-safari
+├── casos-de-teste.txt                 Casos de teste das partes 1, 2 e 3
 ├── parte1-api/questao1.1/
-│ ├── RESPOSTA_TEORICA.md
-│ └── testes/
-│ ├── api.spec.js
-│ └── utils/api-helper.js Leitura do rate limit e gerenciador de token
+│   ├── RESPOSTA_TEORICA.md
+│   └── testes/
+│       ├── api.spec.js
+│       └── utils/api-helper.js        Leitura do rate limit e gerenciador de token
 ├── parte2-e2e/questao2.1/
-│ ├── RESPOSTA_TEORICA.md
-│ └── testes/
-│ ├── checkout-flow.spec.js
-│ ├── pages/ Page Objects: login, produtos e checkout
-│ └── fixtures/checkout-data.js Gerador de dados do cliente
+│   ├── RESPOSTA_TEORICA.md
+│   └── testes/
+│       ├── checkout-flow.spec.js
+│       ├── pages/                     Page Objects: login, produtos e checkout
+│       └── fixtures/checkout-data.js  Gerador de dados do cliente
 ├── parte3-arquivos/questao3.1/
-│ ├── RESPOSTA_TEORICA.md
-│ └── testes/
-│ ├── csv-upload.spec.js
-│ ├── pages/upload-page.js
-│ ├── utils/csv-generator.js Gerador e validador de CSV
-│ └── fixtures/ CSVs de exemplo: válido, vazio, formato incorreto, malformado e corrompido
+│   ├── RESPOSTA_TEORICA.md
+│   └── testes/
+│       ├── csv-upload.spec.js
+│       ├── pages/upload-page.js
+│       ├── utils/csv-generator.js     Gerador e validador de CSV
+│       └── fixtures/                  CSVs de exemplo
 ├── parte4-mobile/questao4.1/RESPOSTA_TEORICA.md
 └── parte5-mocks/questao5.1/RESPOSTA_TEORICA.md
+```
 
 
 **Perfis de execução:**
