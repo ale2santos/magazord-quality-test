@@ -1,27 +1,41 @@
+# Esteira de CI: roda os testes automaticamente a cada envio ao GitHub
 name: Playwright Tests
+
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
+
 jobs:
   test:
-    timeout-minutes: 60
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      # Baixa o código do repositório
+      - uses: actions/checkout@v5
+
+      # Instala o Node 24, a mesma versão usada localmente
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      # Instala as dependências exatamente como estão no package-lock.json
+      - name: Instalar dependências
+        run: npm ci
+
+      # Instala só os navegadores usados nos perfis (Chrome e WebKit/Safari)
+      - name: Instalar navegadores do Playwright
+        run: npx playwright install --with-deps chromium webkit
+
+      # Executa todos os testes pelo mesmo atalho usado localmente
+      - name: Executar testes
+        run: npm test
+
+      # Guarda o relatório HTML, mesmo se algum teste falhar
+      - uses: actions/upload-artifact@v6
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
