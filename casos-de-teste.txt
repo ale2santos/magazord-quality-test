@@ -1,0 +1,132 @@
+CASOS DE TESTE - Teste QA Sênior - Alexandre dos Santos
+========================================================
+
+Critério de escolha: cobrir o fluxo principal (sucesso), as regras de negócio,
+os erros esperados e os casos de borda, priorizando o que causa mais impacto
+para o cliente ou para o negócio.
+
+
+PARTE 1 - TESTES DE API (parte1-api/questao1.1/testes/api.spec.js)
+--------------------------------------------------------------------
+
+CT01 - Headers de rate limit do GitHub
+  Tipo: Sucesso
+  Passos: GET https://api.github.com/users/github
+  Esperado: headers X-RateLimit-Limit = 60, X-RateLimit-Remaining entre 0 e 60,
+            X-RateLimit-Reset no futuro. Se status 200, corpo com login "github".
+
+CT02 - Bloqueio ao exceder o limite do GitHub
+  Tipo: Erro esperado
+  Passos: repetir o GET até a API bloquear
+  Esperado: status 403 (ou 429), Remaining = 0, mensagem "rate limit exceeded".
+  Observação: funciona mesmo se o limite já estiver zerado por execução anterior.
+
+CT03 - Login e obtenção do token (DummyJSON)
+  Tipo: Sucesso
+  Passos: POST /auth/login com usuário de demonstração
+  Esperado: token recebido e válido, 1 login realizado.
+
+CT04 - Reutilização do token
+  Tipo: Sucesso
+  Pré-condição: token obtido no CT03
+  Passos: GET /auth/me com o token guardado
+  Esperado: status 200, usuário "emilys", continua 1 login (sem novo login).
+
+CT05 - Token expirado e renovação automática
+  Tipo: Borda
+  Passos: obter token de 1 minuto, esperar 65 segundos, fazer novo pedido
+  Esperado: gerenciador detecta o vencimento; API recusa o token antigo
+            com 401 "Token Expired!"; gerenciador renova e o pedido retorna 200;
+            total de 2 logins.
+
+CT06 - Login com senha incorreta
+  Tipo: Erro esperado
+  Passos: POST /auth/login com senha errada
+  Esperado: status 400, mensagem "Invalid credentials".
+
+
+PARTE 2 - TESTES E2E DE CHECKOUT (parte2-e2e/questao2.1/testes/checkout-flow.spec.js)
+--------------------------------------------------------------------------------------
+Executados em desktop (Chrome) e mobile (iPhone simulado, WebKit).
+Pré-condição comum: login com standard_user (exceto CT06).
+
+CT01 - Compra de um produto com dados válidos
+  Tipo: Sucesso
+  Passos: adicionar mochila, abrir carrinho, checkout, preencher dados gerados,
+          finalizar
+  Esperado: carrinho com 1 item; mensagem "Thank you for your order!";
+            carrinho vazio após a compra.
+
+CT02 - Cálculo do total com múltiplos produtos
+  Tipo: Regra de negócio
+  Passos: adicionar 3 produtos e seguir até o resumo
+  Esperado: subtotal = soma dos itens; total = subtotal + taxa; compra finalizada.
+
+CT03 - Campos obrigatórios (3 variações: sem nome, sem sobrenome, sem CEP)
+  Tipo: Erro esperado
+  Passos: deixar um campo vazio e continuar
+  Esperado: mensagem de erro do campo e permanência na etapa de dados.
+
+CT04 - Remover produto do carrinho
+  Tipo: Borda
+  Passos: adicionar 2 produtos, remover 1 no carrinho
+  Esperado: 1 item no carrinho e contador igual a 1.
+
+CT05 - Cancelar o checkout
+  Tipo: Borda
+  Passos: iniciar o checkout e cancelar
+  Esperado: volta ao carrinho com o item mantido.
+
+CT06 - Login de usuário bloqueado
+  Tipo: Erro esperado
+  Passos: login com locked_out_user
+  Esperado: mensagem de usuário bloqueado; não acessa a vitrine.
+
+CT07 - Checkout com carrinho vazio (defeito encontrado)
+  Tipo: Defeito conhecido
+  Passos: abrir o carrinho vazio e clicar em checkout
+  Esperado: o sistema deveria impedir o checkout.
+  Resultado atual: o site permite seguir. Marcado com test.fail() para registrar
+  o defeito sem quebrar a esteira.
+
+
+PARTE 3 - TESTES COM ARQUIVOS CSV (parte3-arquivos/questao3.1/testes/csv-upload.spec.js)
+-----------------------------------------------------------------------------------------
+Observação: o site the-internet aceita qualquer arquivo (verificado com curl).
+A validação do conteúdo é feita pelo validador (utils/csv-generator.js).
+
+CT01 - Geração e validação de CSV (3 variações: 10, 100 e 1000 linhas)
+  Tipo: Sucesso
+  Esperado: total processado = total gerado; todas as linhas válidas; sem erros.
+
+CT02 - Erros do CSV malformado com número da linha
+  Tipo: Erro esperado
+  Esperado: 6 linhas, 1 válida e 5 erros: linha 3 e-mail inválido, linha 4 idade
+            inválida, linha 5 colunas incorretas, linha 6 e-mail duplicado,
+            linha 7 nome vazio.
+
+CT03 - Recusa de arquivos inválidos (3 variações)
+  Tipo: Erro esperado
+  Esperado: vazio.csv = "Arquivo vazio"; formato-incorreto.csv = "Cabeçalho inválido";
+            corrompido.csv = "Arquivo corrompido ou com codificação inválida".
+
+CT04 - Upload de CSV válido (3 variações: 10, 100 e 1000 linhas)
+  Tipo: Sucesso
+  Esperado: mensagem "File Uploaded!" e nome do arquivo exibido.
+
+CT05 - Upload de arquivos inválidos (4 variações)
+  Tipo: Comportamento documentado
+  Esperado: o site aceita vazio, formato incorreto, malformado e corrompido,
+            pois não valida conteúdo. A recusa é coberta pelo CT02 e CT03.
+
+CT06 - Envio sem escolher arquivo
+  Tipo: Erro esperado
+  Esperado: "Internal Server Error" e mensagem "No file was chosen".
+
+
+RESUMO
+------
+Parte 1: 6 testes
+Parte 2: 9 testes x 2 perfis = 18 execuções
+Parte 3: 15 testes x 2 perfis = 30 execuções
+Total: 54 execuções na esteira de CI
