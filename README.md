@@ -12,10 +12,9 @@ Teste técnico para a vaga de Coordenador de Qualidade na Magazord.
 
 ```bash
 npm install
-npx playwright install chromium webkit
 ```
 
-O segundo comando baixa os navegadores usados nos testes (Chrome e WebKit, o motor do Safari).
+O `npm install` também baixa os navegadores usados nos testes (Chrome e WebKit, o motor do Safari), pelo script `postinstall` do `package.json`.
 
 ## Execução dos Testes
 
@@ -99,3 +98,14 @@ Minha trajetória é em infraestrutura, deploy, monitoramento e gestão de times
 - O **CT02 da Parte 1** gasta todo o limite da API do GitHub. Depois dele, o limite fica zerado por até 1 hora; os testes foram feitos para passar mesmo assim.
 - O **CT05 da Parte 1** leva pouco mais de 1 minuto, porque espera o token vencer de verdade.
 - Os testes dependem de sites públicos (GitHub, DummyJSON, Sauce Demo, the-internet). Se algum estiver fora do ar, os testes daquele site falham por motivo externo.
+
+## Checklist de entrega
+
+- [x] Todos os testes executam com `npm install && npm test`: 54 execuções aprovadas; o `postinstall` instala os navegadores
+- [x] README completo, com instalação, execução, estrutura e decisões técnicas
+- [x] Respostas teóricas nos arquivos `RESPOSTA_TEORICA.md` das 5 partes
+- [x] Casos de teste das partes 1, 2 e 3 em `casos-de-teste.txt`
+- [x] Código organizado em Page Objects, helpers e fixtures, com comentários nos trechos complexos
+- [x] Commits descritos no padrão Conventional Commits (`feat`, `fix`, `docs`, `ci`, `chore`)
+- [x] Sem credenciais secretas: apenas as credenciais públicas de demonstração dos sites, substituíveis por variáveis de ambiente
+- [x] Testado em máquina limpa: a esteira do GitHub Actions instala tudo do zero e roda os testes a cada push
