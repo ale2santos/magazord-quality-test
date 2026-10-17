@@ -1,0 +1,22 @@
+{
+  "name": "magazord-quality-test",
+  "version": "1.0.0",
+  "description": "Teste para vaga de Coordenador de Qualidade - Magazord",
+  "author": "Alexandre dos Santos",
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:parte1": "playwright test --project=api",
+    "test:parte2": "playwright test parte2-e2e",
+    "test:parte3": "playwright test parte3-arquivos",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5"
+  }
+}
