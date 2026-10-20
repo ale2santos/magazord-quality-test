@@ -76,7 +76,7 @@ npm run report
 Minha trajetória é em infraestrutura, deploy, monitoramento e gestão de times, sem experiência anterior como QA ou com programação de testes automatizados.
 
 - **Infraestrutura, Git, esteira de CI e a definição dos cenários de teste:** feitos com base na minha experiência, pesquisando alguns comandos para relembrar.
-- **Programação dos testes em JavaScript e uso do Playwright:** aprendidos durante este desafio com apoio de IA, passo a passo. Estudei cada linha e consigo explicar o que cada parte faz e por que foi feita assim.
+- **Programação dos testes em JavaScript e uso do Playwright:** aprendidos durante este desafio com apoio de IA, passo a passo.
 - **Partes 4 e 5:** abordagem teórica, sem experiência prática em automação mobile ou integração com marketplaces.
 
 ### Decisões técnicas
